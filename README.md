@@ -47,15 +47,12 @@ Godziny otwarcia:
 README.md
 
 
-## Testowe konta
-
- Rola         E-mail                         Hasło      
-----------------------------------------------------------
-| Admin      | admin@studiowlosew.pl        | admin123   |
-| Pracownik  | anna@studiowlosew.pl         | prac123    |
-| Pracownik  | marta@studiowlosew.pl        | prac123    |
-| Pracownik  | piotr@studiowlosew.pl        | prac123    |
-| Klient     | klient@example.com           | klient123  |
+## Testowe konta     
+ Admin - admin@studiowlosew.pl - admin123   
+ Pracownik - anna@studiowlosew.pl - prac123    
+ Pracownik - marta@studiowlosew.pl - prac123    
+ Pracownik - piotr@studiowlosew.pl - prac123    
+ Klient - klient@example.com - klient123  
 
 Hasła w bazie są przechowywane w postaci zahashowanej (`password_hash()`).
 

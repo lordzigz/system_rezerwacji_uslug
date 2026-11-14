@@ -1,22 +1,21 @@
 <?php
-
+// public/dashboard.php
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
-
-
 require_login();
+
+require_once '../includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel - Studio Włosów</title>
-</head>
-<body>
+<div class="card" style="max-width: 600px;">
     <h1>Witaj, <?= htmlspecialchars($_SESSION['name']) ?>!</h1>
-    <p>Jesteś zalogowany jako: <strong><?= htmlspecialchars($_SESSION['role']) ?></strong></p>
+    <p style="text-align: center; margin-bottom: 2rem;">
+        Jesteś zalogowany jako: <strong><?= htmlspecialchars($_SESSION['role']) ?></strong>
+    </p>
     
-    <p><a href="logout.php">Wyloguj się</a></p>
-</body>
-</html>
+    <div style="text-align: center;">
+        <p>Tu wkrótce pojawią się Twoje rezerwacje i funkcje panelu.</p>
+    </div>
+</div>
+
+<?php require_once '../includes/footer.php'; ?>

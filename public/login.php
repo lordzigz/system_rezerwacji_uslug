@@ -5,7 +5,6 @@ require_once '../includes/auth.php';
 
 $error = '';
 
-// Jeśli użytkownik jest już zalogowany, odeślij go do panelu
 if (isset($_SESSION['user_id'])) {
     header("Location: dashboard.php");
     exit;
@@ -18,20 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = "Podaj e-mail i hasło.";
     } else {
-        // Pobieramy użytkownika o podanym e-mailu
         $stmt = $pdo->prepare("SELECT id, name, surname, password, role, active FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        // Sprawdzamy, czy użytkownik istnieje, czy konto jest aktywne i czy hasło pasuje
         if ($user && $user['active'] == 1 && password_verify($password, $user['password'])) {
-            // Logowanie udane - zapisujemy dane w sesji
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['name'] = $user['name'];
             $_SESSION['surname'] = $user['surname'];
             $_SESSION['role'] = $user['role'];
 
-            // Przekierowanie do panelu
             header("Location: dashboard.php");
             exit;
         } else {
@@ -39,30 +34,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require_once '../includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Logowanie - Studio Włosów</title>
-</head>
-<body>
+<div class="card">
     <h1>Zaloguj się</h1>
     
     <?php if ($error): ?>
-        <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
     
     <form method="POST" action="login.php">
-        <div>
-            <label>E-mail: <input type="email" name="email" required></label>
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" name="email" required>
         </div>
-        <div>
-            <label>Hasło: <input type="password" name="password" required></label>
+        <div class="form-group">
+            <label>Hasło</label>
+            <input type="password" name="password" required>
         </div>
-        <button type="submit">Zaloguj się</button>
+        <button type="submit" class="btn">Zaloguj się</button>
     </form>
-    <p>Nie masz konta? <a href="register.php">Zarejestruj się</a></p>
-</body>
-</html>
+    <p style="text-align: center; margin-top: 1rem;">
+        Nie masz konta? <a href="register.php">Zarejestruj się</a>
+    </p>
+</div>
+
+<?php require_once '../includes/footer.php'; ?>

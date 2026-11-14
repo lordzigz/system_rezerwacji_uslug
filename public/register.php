@@ -49,44 +49,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Rejestracja - Studio Włosów</title>
-</head>
-<body>
+<?php require_once '../includes/header.php';
+?>
+
+<div class="card">
     <h1>Załóż konto</h1>
     
     <?php if ($error): ?>
-        <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
     
     <?php if ($success): ?>
-        <p style="color: green;"><?= htmlspecialchars($success) ?></p>
-        <p><a href="login.php">Przejdź do logowania</a></p>
+        <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+        <p style="text-align: center;"><a href="login.php">Przejdź do logowania</a></p>
     <?php else: ?>
         <form method="POST" action="register.php">
-            <div>
-                <label>Imię: <input type="text" name="name" required></label>
+            <div class="form-group">
+                <label>Imię</label>
+                <input type="text" name="name" required>
             </div>
-            <div>
-                <label>Nazwisko: <input type="text" name="surname" required></label>
+            <div class="form-group">
+                <label>Nazwisko</label>
+                <input type="text" name="surname" required>
             </div>
-            <div>
-                <label>E-mail: <input type="email" name="email" required></label>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" name="email" required>
             </div>
-            <div>
-                <label>Telefon: <input type="text" name="phone"></label>
+            <div class="form-group">
+                <label>Telefon (opcjonalnie)</label>
+                <input type="text" name="phone">
             </div>
-            <div>
-                <label>Hasło: <input type="password" name="password" required></label>
+            <div class="form-group">
+                <label>Hasło (min. 6 znaków)</label>
+                <input type="password" name="password" required>
             </div>
-            <div>
-                <label>Powtórz hasło: <input type="password" name="password_confirm" required></label>
+            <div class="form-group">
+                <label>Powtórz hasło</label>
+                <input type="password" name="password_confirm" required>
             </div>
-            <button type="submit">Zarejestruj się</button>
+            <button type="submit" class="btn">Zarejestruj się</button>
         </form>
     <?php endif; ?>
-</body>
-</html>
+</div>
+
+<?php require_once '../includes/footer.php'; ?>

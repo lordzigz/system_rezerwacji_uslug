@@ -40,8 +40,9 @@ $todayReservations = $pdo->query("SELECT COUNT(*) FROM reservations WHERE reserv
     <h2>Zarządzanie systemem</h2>
     <p>Wybierz moduł, którym chcesz zarządzać:</p>
     <ul style="margin-top: 1rem; list-style-type: none; padding: 0;">
-        <li style="margin-bottom: 0.5rem;"><a href="users.php" style="color: var(--secondary); font-size: 1.2rem;">👥 Użytkownicy i pracownicy</a></li>
         <li style="margin-bottom: 0.5rem;"><a href="services.php" style="color: var(--secondary); font-size: 1.2rem;">✂️ Usługi i kategorie</a></li>
+        <li style="margin-bottom: 0.5rem;"><a href="employee_services.php" style="color: var(--secondary); font-size: 1.2rem;">🔗 Przypisz usługi do pracowników</a></li>
+        <li style="margin-bottom: 0.5rem;"><a href="employee_availability.php" style="color: var(--secondary); font-size: 1.2rem;">⏰ Godziny pracy pracowników</a></li>
         <li style="margin-bottom: 0.5rem;"><a href="#" style="color: #999; font-size: 1.2rem;">📅 Rezerwacje (wkrótce)</a></li>
     </ul>
 </div>

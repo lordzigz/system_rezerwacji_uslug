@@ -1,107 +1,79 @@
 <?php
+// public/index.php
+require_once '../includes/db.php';
+require_once '../includes/auth.php';
 
-require_once '../../includes/db.php';
-require_once '../../includes/auth.php';
+// Pobieramy kategorie i przypisane do nich aktywne usługi
+$stmt = $pdo->query("SELECT c.id as cat_id, c.name as cat_name, c.description as cat_desc, 
+                            s.id as srv_id, s.name as srv_name, s.duration, s.price 
+                     FROM service_categories c 
+                     LEFT JOIN services s ON c.id = s.category_id AND s.active = 1
+                     ORDER BY c.id, s.price");
+$rows = $stmt->fetchAll();
 
-require_role('pracownik');
+// Grupujemy wyniki według kategorii w PHP
+$categories = [];
+foreach ($rows as $row) {
+    if (!isset($categories[$row['cat_id']])) {
+        $categories[$row['cat_id']] = [
+            'name' => $row['cat_name'],
+            'description' => $row['cat_desc'],
+            'services' => []
+        ];
+    }
+    if ($row['srv_id']) {
+        $categories[$row['cat_id']]['services'][] = $row;
+    }
+}
 
-$employee_id = $_SESSION['user_id'];
-$today = date('Y-m-d');
-
-
-$stmt = $pdo->prepare("SELECT r.*, s.name AS srv_name, u.name AS cl_name, u.surname AS cl_surname, u.phone 
-                       FROM reservations r
-                       JOIN services s ON r.service_id = s.id
-                       JOIN users u ON r.user_id = u.id
-                       WHERE r.employee_id = ? AND r.reservation_date = ? AND r.status != 'anulowana'
-                       ORDER BY r.start_time");
-$stmt->execute([$employee_id, $today]);
-$today_reservations = $stmt->fetchAll();
-
-
-$stmt = $pdo->prepare("SELECT r.*, s.name AS srv_name, u.name AS cl_name, u.surname AS cl_surname, u.phone 
-                       FROM reservations r
-                       JOIN services s ON r.service_id = s.id
-                       JOIN users u ON r.user_id = u.id
-                       WHERE r.employee_id = ? AND r.reservation_date > ? AND r.status != 'anulowana'
-                       ORDER BY r.reservation_date, r.start_time");
-$stmt->execute([$employee_id, $today]);
-$future_reservations = $stmt->fetchAll();
-
-require_once '../../includes/header.php';
+require_once '../includes/header.php';
 ?>
 
-<h1>Panel Pracownika</h1>
-<p>Witaj, <?= htmlspecialchars($_SESSION['name']) ?>!</p>
-
-<div class="card" style="max-width: 100%; margin-bottom: 2rem;">
-    <h2>Wizyty na dziś (<?= date('d.m.Y') ?>)</h2>
-    <?php if (empty($today_reservations)): ?>
-        <p>Brak wizyt na dzisiaj.</p>
-    <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Godzina</th>
-                    <th>Klient</th>
-                    <th>Telefon</th>
-                    <th>Usługa</th>
-                    <th>Status</th>
-                    <th>Akcja</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($today_reservations as $res): ?>
-                <tr>
-                    <td><strong><?= substr($res['start_time'], 0, 5) ?> - <?= substr($res['end_time'], 0, 5) ?></strong></td>
-                    <td><?= htmlspecialchars($res['cl_name'] . ' ' . $res['cl_surname']) ?></td>
-                    <td><?= htmlspecialchars($res['phone'] ?? '-') ?></td>
-                    <td><?= htmlspecialchars($res['srv_name']) ?></td>
-                    <td><?= ucfirst($res['status']) ?></td>
-                    <td>
-                        <?php if ($res['status'] === 'oczekujaca'): ?>
-                            <a href="change_status.php?id=<?= $res['id'] ?>&status=potwierdzona" class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto; background: #27ae60;">Potwierdź</a>
-                        <?php elseif ($res['status'] === 'potwierdzona'): ?>
-                            <a href="change_status.php?id=<?= $res['id'] ?>&status=zrealizowana" class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto; background: #2980b9;">Zrealizuj</a>
-                        <?php else: ?>
-                            -
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h1 style="color: var(--primary); font-size: 2.5rem; margin-bottom: 1rem;">Witaj w Studio Włosów!</h1>
+    <p style="font-size: 1.2rem; color: #555;">Profesjonalne strzyżenie, koloryzacja i pielęgnacja włosów.</p>
+    <p style="color: #777;">ul. Piłsudskiego 67, Siedlce</p>
 </div>
 
-<div class="card" style="max-width: 100%;">
-    <h2>Przyszłe wizyty</h2>
-    <?php if (empty($future_reservations)): ?>
-        <p>Brak przyszłych wizyt.</p>
-    <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Godzina</th>
-                    <th>Klient</th>
-                    <th>Usługa</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($future_reservations as $res): ?>
-                <tr>
-                    <td><?= date('d.m.Y', strtotime($res['reservation_date'])) ?></td>
-                    <td><?= substr($res['start_time'], 0, 5) ?> - <?= substr($res['end_time'], 0, 5) ?></td>
-                    <td><?= htmlspecialchars($res['cl_name'] . ' ' . $res['cl_surname']) ?></td>
-                    <td><?= htmlspecialchars($res['srv_name']) ?></td>
-                    <td><?= ucfirst($res['status']) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+<h2 style="margin-bottom: 1.5rem; color: var(--primary);">Nasza oferta</h2>
+
+<!-- Tutaj usunąłem sztywne ustawianie szerokości, żeby tabele ładnie się rozciągały -->
+<div style="display: flex; flex-direction: column; gap: 2rem;">
+    <?php foreach ($categories as $cat): ?>
+        <div class="card" style="max-width: 100%; width: 100%;">
+            <h3 style="color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                <?= htmlspecialchars($cat['name']) ?>
+            </h3>
+            <p style="color: #666; margin-bottom: 1.5rem;"><?= htmlspecialchars($cat['description']) ?></p>
+            
+            <?php if (empty($cat['services'])): ?>
+                <p><em>Brak dostępnych usług w tej kategorii.</em></p>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usługa</th>
+                            <th>Czas trwania</th>
+                            <th>Cena</th>
+                            <th>Akcja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($cat['services'] as $srv): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($srv['srv_name']) ?></td>
+                            <td><?= $srv['duration'] ?> min</td>
+                            <td><?= number_format($srv['price'], 2, ',', ' ') ?> zł</td>
+                            <td>
+                                <a href="book.php?service_id=<?= $srv['srv_id'] ?>" class="btn" style="width: auto; padding: 0.5rem 1rem; font-size: 0.9rem; display: inline-block;">Zarezerwuj</a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
+    <?php endforeach; ?>
 </div>
 
-<?php require_once '../../includes/footer.php'; ?>
+<?php require_once '../includes/footer.php'; ?>

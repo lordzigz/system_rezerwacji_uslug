@@ -153,3 +153,65 @@ th {
     background-color: var(--primary);
     color: white;
 }
+/* =========================================
+   RESPONSYWNOŚĆ 
+   ========================================= */
+
+@media (max-width: 768px) {
+    /* Menu na telefonie */
+    nav {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    
+    .card {
+        overflow-x: auto;
+    }
+
+    /* Kafelki na dashboardzie admina */
+    div[style*="display: flex; gap: 1rem;"] {
+        flex-direction: column !important;
+    }
+
+    /* Formularze (np. filtry) */
+    form[style*="display: flex;"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    form[style*="display: flex;"] > div,
+    form[style*="display: flex;"] > button,
+    form[style*="display: flex;"] > a {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+   
+    .container {
+        padding: 0 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    table th, table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+}

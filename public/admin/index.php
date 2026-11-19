@@ -43,7 +43,7 @@ $todayReservations = $pdo->query("SELECT COUNT(*) FROM reservations WHERE reserv
         <li style="margin-bottom: 0.5rem;"><a href="services.php" style="color: var(--secondary); font-size: 1.2rem;">✂️ Usługi i kategorie</a></li>
         <li style="margin-bottom: 0.5rem;"><a href="employee_services.php" style="color: var(--secondary); font-size: 1.2rem;">🔗 Przypisz usługi do pracowników</a></li>
         <li style="margin-bottom: 0.5rem;"><a href="employee_availability.php" style="color: var(--secondary); font-size: 1.2rem;">⏰ Godziny pracy pracowników</a></li>
-        <li style="margin-bottom: 0.5rem;"><a href="#" style="color: #999; font-size: 1.2rem;">📅 Rezerwacje (wkrótce)</a></li>
+        <li style="margin-bottom: 0.5rem;"><a href="reservations.php" style="color: var(--secondary); font-size: 1.2rem;">📅 Zarządzanie rezerwacjami</a></li>
     </ul>
 </div>
 

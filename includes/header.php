@@ -18,9 +18,13 @@ if (session_status() === PHP_SESSION_NONE) {
         <ul>
             <li><a href="/system_rezerwacji_uslug/public/index.php">Strona główna</a></li>
             
-            <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="/system_rezerwacji_uslug/public/dashboard.php">Mój panel</a></li>
                 
+                <?php if ($_SESSION['role'] === 'klient'): ?>
+                    <li><a href="/system_rezerwacji_uslug/public/my_reservations.php">Moje rezerwacje</a></li>
+                <?php endif; ?>
+
                 <?php if ($_SESSION['role'] === 'admin'): ?>
                     <li><a href="/system_rezerwacji_uslug/public/admin/index.php">Admin</a></li>
                 <?php endif; ?>
